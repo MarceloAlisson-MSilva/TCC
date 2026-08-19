@@ -139,7 +139,7 @@ export function Chat() {
   };
 
   const handleTrocarOrientador = () => {
-    navigate('/home');
+    navigate(usuarioLogado?.perfil === 'PROFESSOR' ? '/professor' : '/home');
   };
 
   return (
@@ -187,7 +187,9 @@ export function Chat() {
         ) : (
           <div className="chat-container" style={{ flex: 1 }}>
             <aside className="sidebar-chat">
-              <div className="sidebar-header">SOBRE O ORIENTADOR</div>
+              <div className="sidebar-header">
+                {usuarioLogado?.perfil === 'PROFESSOR' ? 'SOBRE O ALUNO' : 'SOBRE O ORIENTADOR'}
+              </div>
               
               {orientador && (
                 <div className="perfil-orientador">
@@ -203,7 +205,7 @@ export function Chat() {
               )}
 
               <button className="btn-trocar-prof" onClick={handleTrocarOrientador}>
-                Trocar Orientador
+                {usuarioLogado?.perfil === 'PROFESSOR' ? 'Voltar aos Orientandos' : 'Trocar Orientador'}
               </button>
 
               <p className="tema-projeto">{projetoAtual.tema}</p>

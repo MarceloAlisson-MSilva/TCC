@@ -1,3 +1,4 @@
+import bcrypt from 'bcryptjs';
 import { prisma } from '../src/config/prisma.js';
 
 // ---------------------------------------------------------------------------
@@ -447,12 +448,18 @@ async function main() {
 
   console.log('👨‍🏫 Cadastrando professores de teste...');
 
+  // Senha padrão de todos os professores de teste: "123456"
+  // (hasheada aqui, do mesmo jeito que o authController.registrar faz no cadastro real —
+  // sem isso, o login desses professores falharia no bcrypt.compare)
+  const SENHA_PADRAO_TESTE = '123456';
+  const senhaHasheada = await bcrypt.hash(SENHA_PADRAO_TESTE, 10);
+
   for (const p of professores) {
     const usuarioCriado = await prisma.usuario.create({
       data: {
         nome: p.nome,
         email: p.email,
-        senha: '123', // Em dev/testes
+        senha: senhaHasheada,
         perfil: 'PROFESSOR',
         curso: p.curso,
         detalhesProfessor: {
@@ -478,6 +485,7 @@ async function main() {
   }
 
   console.log('🌱 Seed concluído com sucesso! Banco populado.');
+  console.log(`🔑 Todos os professores de teste usam a senha: "${SENHA_PADRAO_TESTE}"`);
 }
 
 main()

@@ -1,0 +1,72 @@
+.vagas-resumo {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  background-color: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  width: fit-content;
+}
+
+.vagas-numero {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1A2438;
+}
+
+.vagas-texto {
+  color: #6B7280;
+  font-size: 0.9rem;
+}
+
+.vagas-restantes {
+  margin-left: 16px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background-color: #ECFDF5;
+  color: #059669;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.estado-vazio-orientandos {
+  text-align: center;
+  margin-top: 60px;
+  color: #6B7280;
+}
+
+.estado-vazio-orientandos h2 {
+  color: #1A2438;
+  margin-bottom: 8px;
+}
+
+.orientandos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.orientando-card {
+  background-color: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.badge-status {
+  background-color: #EFF6FF;
+  color: #2563EB;
+}
+
+.ultima-mensagem {
+  font-size: 0.85rem;
+  color: #6B7280;
+  font-style: italic;
+  border-left: 2px solid #E5E7EB;
+  padding-left: 10px;
+}

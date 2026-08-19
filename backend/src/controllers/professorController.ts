@@ -64,6 +64,59 @@ export const listarProfessores = async (req: Request, res: Response) => {
   }
 };
 
+export const listarOrientandos = async (req: RequestAutenticado, res: Response) => {
+  try {
+    // O professor vem do token verificado pelo middleware "autenticar" — não do
+    // body/params, pra ninguém conseguir ver a lista de orientandos de outro professor.
+    const professorId = req.usuario!.id;
+
+    // Busca as vagas do professor (pra mostrar "3/5 vagas ocupadas" no dashboard)
+    const detalhes = await prisma.detalhesProfessor.findUnique({
+      where: { professorId },
+      select: { vagasTotais: true, vagasOcupadas: true },
+    });
+
+    // Busca os projetos de TCC vinculados a esse professor, com dados do aluno
+    // e a última mensagem trocada (pra dar um preview tipo "última msg: ...")
+    const projetos = await prisma.projetosTCC.findMany({
+      where: { professorId },
+      select: {
+        id: true,
+        titulo: true,
+        status: true,
+        criadoEm: true,
+        aluno: {
+          select: { id: true, nome: true, email: true, curso: true },
+        },
+        mensagens: {
+          orderBy: { criadoEm: 'desc' },
+          take: 1,
+          select: { conteudo: true, criadoEm: true, autorId: true },
+        },
+      },
+      orderBy: { criadoEm: 'desc' },
+    });
+
+    const orientandos = projetos.map((projeto) => ({
+      projetoId: projeto.id,
+      titulo: projeto.titulo,
+      status: projeto.status,
+      aluno: projeto.aluno,
+      ultimaMensagem: projeto.mensagens[0]?.conteudo ?? null,
+      ultimaMensagemEm: projeto.mensagens[0]?.criadoEm ?? null,
+    }));
+
+    return res.json({
+      vagasTotais: detalhes?.vagasTotais ?? 0,
+      vagasOcupadas: detalhes?.vagasOcupadas ?? 0,
+      orientandos,
+    });
+  } catch (error) {
+    console.error('Erro ao listar orientandos:', error);
+    return res.status(500).json({ erro: 'Erro interno ao listar orientandos.' });
+  }
+};
+
 export const vincularOrientador = async (req: RequestAutenticado, res: Response) => {
   try {
     // O aluno vem do token verificado pelo middleware "autenticar" — não do body,

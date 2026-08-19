@@ -17,7 +17,10 @@ export function Login() {
     const resposta = await api.post('/auth/login', { email, senha });
 
     login(resposta.data.token, resposta.data.usuario);
-    navigate('/home');
+
+    // Cada perfil tem seu próprio dashboard
+    const destino = resposta.data.usuario.perfil === 'PROFESSOR' ? '/professor' : '/home';
+    navigate(destino);
   } catch (erro: any) {
     const mensagemErro = erro.response?.data?.error || 'E-mail ou senha incorretos.';
     alert(mensagemErro);
