@@ -1,0 +1,229 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Enums
+enum PerfilUsuario {
+  ALUNO
+  PROFESSOR
+}
+
+enum StatusTCC {
+  ONBOARDING
+  EM_ANDAMENTO
+  AGUARDANDO_AVALIACAO
+  CONCLUIDO
+}
+
+enum TipoMensagem {
+  TEXTO
+  ARQUIVO
+  AUDIO
+}
+
+// 1. Usuários (Aluno e Professor)
+model Usuario {
+  id                Int                  @id @default(autoincrement())
+  nome              String               @db.VarChar(150)
+  email             String               @unique @db.VarChar(150)
+  senha             String               @db.VarChar(255)
+  perfil            PerfilUsuario
+  curso             String?              @db.VarChar(100)
+  fotoUrl           String               @default("default_avatar.png") @db.VarChar(255)
+  criadoEm          DateTime             @default(now())
+  
+  // Relacionamentos
+  detalhesProfessor DetalhesProfessor?
+  projetoComoAluno  ProjetosTCC?         @relation("AlunoProjeto")
+  projetosOrientados ProjetosTCC[]       @relation("ProfessorProjeto")
+  respostasQuiz     RespostasAlunoQuiz[]
+  progressoAulas    ProgressoAulas[]
+  mensagens         Mensagem[]           
+
+  @@map("usuarios")
+}
+
+// 2. Detalhes do Professor (Controle de Vagas)
+model DetalhesProfessor {
+  id            Int     @id @default(autoincrement())
+  professorId   Int     @unique @map("professor_id")
+  vagasTotais   Int     @default(5) @map("vagas_totais")
+  vagasOcupadas Int     @default(0) @map("vagas_ocupadas")
+  biografia     String? @db.Text
+
+  professor      Usuario                  @relation(fields: [professorId], references: [id], onDelete: Cascade)
+  especialidades EspecialidadeProfessor[]
+
+  @@map("detalhes_professor")
+}
+
+// 3. Templates de TCC (Arquivos base)
+model TemplatesTCC {
+  id           Int                   @id @default(autoincrement())
+  nomeTemplate String                @db.VarChar(150) @map("nome_template")
+  descricao    String?               @db.Text
+  arquivoUrl   String                @db.VarChar(255) @map("arquivo_url")
+  
+  caminhosFinais CaminhosFinaisFluxo[]
+  projetosTcc    ProjetosTCC[]
+
+  @@map("templates_tcc")
+}
+
+// 4. Nós Finais do Fluxograma (Raias do PDF)
+model CaminhosFinaisFluxo {
+  id                Int             @id @default(autoincrement())
+  codigoRamificacao String          @unique @db.VarChar(50) @map("codigo_ramificacao")
+  templateId        Int             @map("template_id")
+  
+  template          TemplatesTCC    @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  exemplosTemas     ExemplosTemas[]
+  opcoesQuiz        OpcoesQuiz[]
+
+  professoresEspecialistas EspecialidadeProfessor[]
+
+  @@map("caminhos_finais_fluxo")
+}
+
+// 5. Exemplos de Temas (Caixas roxas/cinzas do PDF)
+model ExemplosTemas {
+  id               Int                 @id @default(autoincrement())
+  caminhoFinalId   Int                 @map("caminho_final_id")
+  textoExemploTema String              @db.Text @map("texto_exemplo_tema")
+  
+  caminhoFinal     CaminhosFinaisFluxo @relation(fields: [caminhoFinalId], references: [id], onDelete: Cascade)
+
+  @@map("exemplos_temas")
+}
+
+// 6. Projetos de TCC
+model ProjetosTCC {
+  id                 Int           @id @default(autoincrement())
+  alunoId            Int           @unique @map("aluno_id")
+  professorId        Int?          @map("professor_id")
+  titulo             String        @default("Tema em Definição") @db.VarChar(255)
+  descricao          String?       @db.Text
+  status             StatusTCC     @default(ONBOARDING)
+  templateSugeridoId Int?          @map("template_sugerido_id")
+  criadoEm           DateTime      @default(now()) @map("criated_at")
+
+  aluno            Usuario       @relation("AlunoProjeto", fields: [alunoId], references: [id], onDelete: Cascade)
+  professor        Usuario?      @relation("ProfessorProjeto", fields: [professorId], references: [id], onDelete: SetNull)
+  templateSugerido TemplatesTCC? @relation(fields: [templateSugeridoId], references: [id], onDelete: SetNull)
+  
+  mensagens        Mensagem[]
+
+  @@map("projetos_tcc")
+}
+
+// 7. Perguntas do Quiz (Árvore de Decisão)
+model PerguntasQuiz {
+  id            Int          @id @default(autoincrement())
+  textoPergunta String       @db.Text @map("texto_pergunta")
+  ordem         Int          @unique
+  
+  opcoes        OpcoesQuiz[] @relation("PerguntaParaOpcoes")
+  opcoesOrigem  OpcoesQuiz[] @relation("ProximaPergunta")
+
+  @@map("perguntas_quiz")
+}
+
+// 8. Opções do Quiz (Com encadeamento lógico do Fluxograma)
+model OpcoesQuiz {
+  id                Int                  @id @default(autoincrement())
+  perguntaId        Int                  @map("pergunta_id")
+  textoOpcao        String               @db.Text @map("texto_opcao")
+  proximaPerguntaId Int?                 @map("proxima_pergunta_id")
+  caminhoFinalId    Int?                 @map("caminho_final_id")
+
+  pergunta        PerguntasQuiz        @relation("PerguntaParaOpcoes", fields: [perguntaId], references: [id], onDelete: Cascade)
+  proximaPergunta PerguntasQuiz?       @relation("ProximaPergunta", fields: [proximaPerguntaId], references: [id], onDelete: SetNull)
+  caminhoFinal    CaminhosFinaisFluxo? @relation(fields: [caminhoFinalId], references: [id], onDelete: SetNull)
+  respostasAlunos RespostasAlunoQuiz[]
+
+  @@map("opcoes_quiz")
+}
+
+// 9. Respostas do Aluno
+model RespostasAlunoQuiz {
+  id      Int        @id @default(autoincrement())
+  alunoId Int        @map("aluno_id")
+  opcaoId Int        @map("opcao_id")
+
+  aluno Usuario    @relation(fields: [alunoId], references: [id], onDelete: Cascade)
+  opcao OpcoesQuiz @relation(fields: [opcaoId], references: [id], onDelete: Cascade)
+
+  @@unique([alunoId, opcaoId])
+  @@map("respostas_aluno_quiz")
+}
+
+// 10. Módulos do Curso (Udemy Textual)
+model Modulos {
+  id     Int          @id @default(autoincrement())
+  titulo String       @db.VarChar(150)
+  ordem  Int          @unique
+  aulas  AulasTexto[]
+
+  @@map("modulos")
+}
+
+// 11. Aulas por Módulo
+model AulasTexto {
+  id              Int              @id @default(autoincrement())
+  moduloId        Int              @map("modulo_id")
+  tituloAula      String           @db.VarChar(150) @map("titulo_aula")
+  conteudoEscrito String           @db.Text @map("conteudo_escrito")
+  ordem           Int
+  
+  modulo     Modulos          @relation(fields: [moduloId], references: [id], onDelete: Cascade)
+  progressos ProgressoAulas[]
+
+  @@map("aulas_texto")
+}
+
+// 12. Controle de Progresso
+model ProgressoAulas {
+  alunoId   Int     @map("aluno_id")
+  aulaId    Int     @map("aula_id")
+  concluido Boolean @default(true)
+
+  aluno Usuario    @relation(fields: [alunoId], references: [id], onDelete: Cascade)
+  aula  AulasTexto @relation(fields: [aulaId], references: [id], onDelete: Cascade)
+
+  @@id([alunoId, aulaId])
+  @@map("progresso_aulas")
+}
+
+// 13. Chat (Mensagens, Arquivos e Áudios)
+model Mensagem {
+  id          Int          @id @default(autoincrement())
+  projetoId   Int          @map("projeto_id")
+  autorId     Int          @map("autor_id")
+  
+  conteudo    String       @db.Text
+  tipo        TipoMensagem @default(TEXTO)
+  
+  criadoEm    DateTime     @default(now()) @map("criado_em")
+
+  // Relacionamentos limpos
+  projeto     ProjetosTCC  @relation(fields: [projetoId], references: [id], onDelete: Cascade)
+  autor       Usuario      @relation(fields: [autorId], references: [id], onDelete: Cascade)
+
+  @@map("mensagens")
+}
+
+// 14. Especialidades dos Professores (Relacionamento N:N)
+model EspecialidadeProfessor {
+  professorId    Int                 @map("professor_id")
+  caminhoFinalId Int                 @map("caminho_final_id")
+
+  professor    DetalhesProfessor   @relation(fields: [professorId], references: [id], onDelete: Cascade)
+  caminhoFinal CaminhosFinaisFluxo @relation(fields: [caminhoFinalId], references: [id], onDelete: Cascade)
+
+  @@id([professorId, caminhoFinalId])
+  @@map("especialidades_professor")
+}

@@ -1,0 +1,423 @@
+/* Container Principal (Layout de Dashboard) */
+.dashboard-container {
+  display: flex;
+  height: 100vh;
+  background-color: #F4F4F0;
+  color: #1A2438;
+  overflow: hidden; 
+}
+
+/* ==================================
+   MENU LATERAL (SIDEBAR)
+================================== */
+.sidebar {
+  width: 260px;
+  background-color: #FFFFFF;
+  border-right: 1px solid #E5E7EB;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 0;
+  flex-shrink: 0;
+}
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 24px;
+  margin-bottom: 40px;
+}
+
+.sidebar-logo .logo-icon {
+  background-color: #1A2438;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar-logo .logo-text {
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.nav-section-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #9CA3AF;
+  letter-spacing: 1px;
+  padding: 0 24px;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 32px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 24px;
+  background: none;
+  border: none;
+  color: #4B5563;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s;
+}
+
+.nav-item:hover {
+  background-color: #F3F4F6;
+}
+
+.nav-item.active {
+  background-color: #1A2438;
+  color: #FFFFFF;
+  border-radius: 0 24px 24px 0;
+  margin-right: 24px; 
+}
+
+/* Rodapé Lateral */
+.sidebar-footer {
+  padding: 0 20px;
+  border-top: 1px solid #E5E7EB;
+  padding-top: 380px;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.user-avatar {
+  width: 26px;
+  height: 36px;
+  background-color: #E5E7EB;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #4B5563;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-info strong {
+  font-size: 0.9rem;
+}
+
+.user-info span {
+  font-size: 0.8rem;
+  color: #6B7280;
+}
+
+.btn-logout {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  color: #6B7280;
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s;
+}
+
+.btn-logout:hover {
+  color: #EF4444; /* Vermelho no hover */
+}
+
+
+/* ==================================
+   ÁREA PRINCIPAL
+================================== */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Topbar */
+.topbar {
+  height: 70px;
+  border-bottom: 1px solid #E5E7EB;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 32px;
+  background-color: #FFFFFF;
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.breadcrumb {
+  font-weight: 600;
+  color: #1A2438;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.btn-fluxo-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #E5E7EB;
+  color: #4B5563;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-fluxo-top:hover {
+  background-color: #D1D5DB;
+}
+
+/* Conteúdo da Página com rolagem */
+.page-content {
+  flex: 1;
+  padding: 40px;
+  overflow-y: auto; /* Permite rolar os professores */
+}
+
+.page-header h1 {
+  font-family: 'Georgia', 'Merriweather', serif;
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+.page-header p {
+  color: #6B7280;
+  margin-bottom: 32px;
+}
+
+.search-bar {
+  background-color: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  gap: 12px;
+  margin-bottom: 40px;
+}
+
+.search-bar input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 1rem;
+}
+
+/* ==================================
+   GRID DE CARTÕES
+================================== */
+.professors-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 24px;
+}
+
+.professor-card {
+  background-color: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.avatar {
+  width: 48px;
+  height: 48px;
+  background-color: #1A2438;
+  color: white;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.avatar-disabled {
+  background-color: #E5E7EB;
+  color: #9CA3AF;
+}
+
+.prof-info {
+  flex: 1;
+}
+
+.prof-info h3 {
+  font-size: 1.1rem;
+  margin-bottom: 4px;
+}
+
+.prof-info p {
+  font-size: 0.85rem;
+  color: #6B7280;
+  margin: 0;
+}
+
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.badge-available {
+  background-color: #D1FAE5;
+  color: #065F46;
+}
+
+.badge-unavailable {
+  background-color: #F3F4F6;
+  color: #6B7280;
+}
+
+.prof-description {
+  font-size: 0.95rem;
+  color: #4B5563;
+  line-height: 1.5;
+  margin-bottom: 24px;
+}
+
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+  flex-grow: 1; /* Joga o botão lá pra baixo */
+}
+
+.tag {
+  background-color: #F3F4F6;
+  color: #4B5563;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+}
+
+.btn-action {
+  width: 100%;
+  padding: 12px;
+  background-color: #1A2438;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-action:hover:not(:disabled) {
+  background-color: #253554;
+}
+
+.btn-disabled {
+  background-color: #E5E7EB;
+  color: #9CA3AF;
+  cursor: not-allowed;
+}
+
+/* Animação e Layout da Sidebar */
+.sidebar {
+  transition: all 0.3s ease;
+  overflow: hidden; 
+}
+
+/* Classe para recolher 100% da tela */
+.sidebar.oculta {
+  width: 0 !important;
+  min-width: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  opacity: 0; 
+}
+
+/* Estilos para quando a sidebar estiver RECOLHIDA */
+.sidebar.recolhida {
+  width: 72px !important;
+  min-width: 72px !important;
+}
+
+.sidebar-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.btn-toggle-sidebar {
+  background: transparent;
+  border: none;
+  color: #9CA3AF;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border-radius: 6px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.btn-toggle-sidebar:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #FFFFFF;
+}
+
+/* Centralização de elementos quando recolhida */
+.sidebar.recolhida .nav-item {
+  justify-content: center;
+  padding: 12px 0;
+}
+
+.sidebar.recolhida .user-profile {
+  justify-content: center;
+}
+
+.sidebar.recolhida .btn-logout {
+  justify-content: center;
+  padding: 10px 0;
+}

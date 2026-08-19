@@ -1,0 +1,108 @@
+/* Container principal sem centralizar verticalmente de forma rígida */
+.cadastro-container {
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #F4F4F0; 
+  padding: 40px 20px;
+}
+
+/* Limita a largura para não esticar muito em telas grandes */
+.cadastro-content {
+  width: 100%;
+  max-width: 460px;
+}
+
+/* Botão Voltar */
+.btn-voltar {
+  background: none;
+  border: none;
+  color: #6B7280;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 32px;
+  transition: color 0.2s;
+}
+
+.btn-voltar:hover {
+  color: #1A2438;
+}
+
+/* Cabeçalho */
+.cadastro-header {
+  margin-bottom: 32px;
+}
+
+.cadastro-header h1 {
+  font-family: 'Georgia', 'Merriweather', serif;
+  font-size: 1.8rem;
+  color: #1A2438;
+  margin-bottom: 8px;
+}
+
+.cadastro-header p {
+  color: #6B7280;
+  font-size: 0.95rem;
+}
+
+/* Formulário e Espaçamento */
+.cadastro-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Inputs sem o cartão de fundo, então eles têm o fundo branco próprio */
+.input-group input {
+  padding: 14px 16px;
+  border: 1px solid #D1D5DB;
+  border-radius: 12px;
+  font-size: 1rem;
+  outline: none;
+  background-color: #FFFFFF;
+  transition: border-color 0.2s;
+}
+
+.input-group input:focus {
+  border-color: #1A2438;
+}
+
+.input-group input::placeholder {
+  color: #9CA3AF;
+}
+
+.hint-text {
+  font-size: 0.85rem;
+  color: #6B7280;
+  margin-top: 4px;
+}
+
+/* Botão Principal */
+.cadastro-button {
+  background-color: #1A2438;
+  color: white;
+  border: none;
+  padding: 16px;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 16px;
+  transition: background-color 0.2s;
+}
+
+.cadastro-button:hover {
+  background-color: #253554;
+}
+
+/* Rodapé */
+.cadastro-footer {
+  margin-top: 32px;
+  text-align: center;
+  font-size: 0.95rem;
+  color: #6B7280;
+}
